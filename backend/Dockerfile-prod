@@ -1,0 +1,31 @@
+FROM amazoncorretto:21.0.3-alpine AS builder
+
+WORKDIR /build
+
+COPY gradlew gradlew
+
+COPY gradle gradle/
+
+COPY settings.gradle settings.gradle
+
+COPY build.gradle build.gradle
+
+RUN ./gradlew dependencies || return 0
+
+COPY src src
+
+RUN ./gradlew clean build -x test
+
+
+
+
+
+FROM amazoncorretto:21.0.3-alpine
+
+WORKDIR /app
+
+COPY --from=builder /build/build/libs/wormhole-0.0.1-beta.1.jar app.jar
+
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

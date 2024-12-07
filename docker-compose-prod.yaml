@@ -1,0 +1,13 @@
+---
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile-prod
+    container_name: frontend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile-prod
+    container_name: backend
